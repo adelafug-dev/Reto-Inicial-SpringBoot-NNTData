@@ -1,26 +1,26 @@
 package reto.spring.retoinicialspringboot.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Objects;
 
 @Getter @Setter
 @AllArgsConstructor @NoArgsConstructor
-@Entity
+@Entity @Builder
 @Table(name = "languaje")
 public class Languaje {
 
+    // A la hora de usar GenerationType.IDENTITY no debo de generarlo en la bbdd , ya se genera solo
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // Si no lo llamo igual en @Colum que el atributo da fallo
     @Column(name = "iso")
-    private String iso6391;
+    private String iso;
 
+    @Column(name = "message")
     private String message;
 
     @Override
@@ -28,12 +28,11 @@ public class Languaje {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Languaje languaje = (Languaje) o;
-        return id.equals(languaje.id) && iso6391.equals(languaje.iso6391) && message.equals(languaje.message);
+        return iso.equals(languaje.iso) && message.equals(languaje.message);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, iso6391, message);
+        return Objects.hash(iso, message);
     }
-
 }
