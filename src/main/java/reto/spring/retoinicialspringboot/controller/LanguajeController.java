@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reto.spring.retoinicialspringboot.entity.Languaje;
@@ -59,11 +60,20 @@ public class LanguajeController {
             @ApiResponse(responseCode = "404", description = "Error to create the Languaje")
     })
     @PostMapping
-    public Languaje createLanguaje(@RequestBody Languaje languaje){
+    public ResponseEntity<Languaje> createLanguaje(@RequestBody Languaje languaje){
+
+        List<Languaje> languajes = languajeService.listAllLanguajes();
+        // Si existe el iso que se intenta crear se cancela el POST
+        for (Languaje languaje1 : languajes){
+            if (languaje1.getIso().equals(languaje.getIso())){
+                return ResponseEntity.status(HttpStatus.CONFLICT).build();
+            }
+        }
+
         Languaje newLanguaje = languajeService.createLanguaje(languaje);
         newLanguaje.setIso(newLanguaje.getIso().toUpperCase());
         newLanguaje.setMessage(newLanguaje.getMessage().toUpperCase());
-        return newLanguaje;
+        return ResponseEntity.ok(newLanguaje);
     }
 
     @Tag(name = "PUT")
